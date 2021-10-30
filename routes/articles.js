@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult} = require("express-validator");
 
-//Bring in Article model
+// Bring in Article model
 let Article = require("../models/article");
 
 
