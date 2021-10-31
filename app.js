@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const { check, validationResult} = require("express-validator");
 const flash = require("connect-flash");
 const session = require("express-session");
+const passport = require("passport");
+const config = require("./config/database");
 
 const app = express();
 const port = 3000;
@@ -14,7 +16,7 @@ const port = 3000;
 // Bring in models
 let Article = require("./models/article");
 // Connect to db
-mongoose.connect("mongodb://localhost/nodekb");
+mongoose.connect(config.database);
 let db = mongoose.connection;
 // Check connection
 db.once("open", function(){
@@ -51,6 +53,19 @@ app.use(function (req, res, next) {
   res.locals.messages = require("express-messages")(req, res);
   next();
 });
+
+
+// Passport Config
+require("./config/passport")(passport);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.get("*", function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
+})
 
 
 // Routes
